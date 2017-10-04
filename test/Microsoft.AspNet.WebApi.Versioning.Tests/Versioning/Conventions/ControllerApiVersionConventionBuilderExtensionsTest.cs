@@ -9,17 +9,6 @@
 
     public class ControllerApiVersionConventionBuilderExtensionsTest
     {
-        sealed class TestControllerApiVersionConventionBuilder : ControllerApiVersionConventionBuilder<IHttpController>
-        {
-            internal ICollection<ApiVersion> ProtectedSupportedVersions => SupportedVersions;
-
-            internal ICollection<ApiVersion> ProtectedDeprecatedVersions => DeprecatedVersions;
-
-            internal ICollection<ApiVersion> ProtectedAdvertisedVersions => AdvertisedVersions;
-
-            internal ICollection<ApiVersion> ProtectedDeprecatedAdvertisedVersions => DeprecatedAdvertisedVersions;
-        }
-
         [Fact]
         public void has_api_version_should_add_major_version()
         {
@@ -498,6 +487,19 @@
 
             // assert
             controllerBuilder.ProtectedDeprecatedAdvertisedVersions.Should().BeEquivalentTo( new[] { new ApiVersion( 1, 0 ), new ApiVersion( 2, 0 ), new ApiVersion( 3, 0 ) } );
+        }
+
+        sealed class TestControllerApiVersionConventionBuilder : ControllerApiVersionConventionBuilder
+        {
+            internal TestControllerApiVersionConventionBuilder() : base( typeof( IHttpController ) ) { }
+
+            internal ICollection<ApiVersion> ProtectedSupportedVersions => SupportedVersions;
+
+            internal ICollection<ApiVersion> ProtectedDeprecatedVersions => DeprecatedVersions;
+
+            internal ICollection<ApiVersion> ProtectedAdvertisedVersions => AdvertisedVersions;
+
+            internal ICollection<ApiVersion> ProtectedDeprecatedAdvertisedVersions => DeprecatedAdvertisedVersions;
         }
     }
 }

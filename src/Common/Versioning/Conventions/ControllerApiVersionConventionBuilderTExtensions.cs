@@ -6,19 +6,15 @@ namespace Microsoft.AspNetCore.Mvc.Versioning.Conventions
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics.Contracts;
 #if WEBAPI
     using System.Web.Http.Controllers;
 #endif
 
-    /// <summary>
-    /// Provides extension methods for <see cref="ControllerApiVersionConventionBuilder{T}"/>.
-    /// </summary>
-#if !WEBAPI
-    [CLSCompliant( false )]
-#endif
-    public static class ControllerApiVersionConventionBuilderExtensions
+    /// <content>
+    /// Provides the generic builder extension methods.
+    /// </content>
+    public static partial class ControllerApiVersionConventionBuilderExtensions
     {
         /// <summary>
         /// Indicates that the specified API version is supported by the configured controller.

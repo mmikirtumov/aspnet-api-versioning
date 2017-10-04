@@ -169,12 +169,20 @@
         {
             // arrange
             var configuration = new HttpConfiguration();
+            var action = new Mock<HttpActionDescriptor>() { CallBase = true }.Object;
             var json = new JsonMediaTypeFormatter();
+            var formUrlEncoded = new FormUrlEncodedMediaTypeFormatter();
 
             configuration.Formatters.Clear();
             configuration.Formatters.Add( json );
+            configuration.Formatters.Add( formUrlEncoded );
+            action.Configuration = configuration;
 
-            var description = new ApiDescription() { SupportedResponseFormatters = { json } };
+            var description = new ApiDescription()
+            {
+                ActionDescriptor = action,
+                SupportedRequestBodyFormatters = { json, formUrlEncoded }
+            };
             var version = new ApiVersion( 1, 0 );
             var options = new ApiExplorerOptions( configuration );
             var context = new ApiVersionParameterDescriptionContext( description, version, options );
@@ -183,7 +191,7 @@
             context.AddParameter( "v", MediaTypeParameter );
 
             // assert
-            var formatter = description.SupportedResponseFormatters.Single();
+            var formatter = description.SupportedRequestBodyFormatters[0];
 
             foreach ( var mediaType in formatter.SupportedMediaTypes )
             {
@@ -191,6 +199,14 @@
             }
 
             formatter.Should().NotBeSameAs( json );
+            formatter = description.SupportedRequestBodyFormatters[1];
+
+            foreach ( var mediaType in formatter.SupportedMediaTypes )
+            {
+                mediaType.Parameters.Single().Should().Be( new NameValueHeaderValue( "v", "1.0" ) );
+            }
+
+            formatter.Should().NotBeSameAs( formUrlEncoded );
         }
 
         [Fact]

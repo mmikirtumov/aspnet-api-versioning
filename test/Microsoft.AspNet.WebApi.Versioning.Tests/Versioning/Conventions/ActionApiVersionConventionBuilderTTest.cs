@@ -11,20 +11,6 @@
 
     public class ActionApiVersionConventionBuilderTTest
     {
-        public sealed class UndecoratedController : ApiController
-        {
-            public IHttpActionResult Get() => Ok();
-        }
-
-        public sealed class DecoratedController : ApiController
-        {
-            public IHttpActionResult Get() => Ok();
-
-            [MapToApiVersion( "2.0" )]
-            [MapToApiVersion( "3.0" )]
-            public IHttpActionResult GetV2() => Ok();
-        }
-
         [Fact]
         public void apply_to_should_assign_empty_model_without_api_versions_from_mapped_convention()
         {
@@ -80,8 +66,8 @@
         public void apply_to_should_assign_model_with_declared_api_versions_from_mapped_convention_and_attributes()
         {
             // arrange
-            var controllerBuilder = new ControllerApiVersionConventionBuilder<UndecoratedController>();
-            var actionBuilder = new ActionApiVersionConventionBuilder<UndecoratedController>( controllerBuilder );
+            var controllerBuilder = new ControllerApiVersionConventionBuilder<DecoratedController>();
+            var actionBuilder = new ActionApiVersionConventionBuilder<DecoratedController>( controllerBuilder );
             var controllerDescriptor = new HttpControllerDescriptor() { ControllerType = typeof( DecoratedController ) };
             var method = typeof( DecoratedController ).GetMethod( nameof( DecoratedController.Get ) );
             var actionDescriptor = new ReflectedHttpActionDescriptor( controllerDescriptor, method );
@@ -119,6 +105,20 @@
 
             // assert
             controllerBuilder.Verify( cb => cb.Action( method ), Once() );
+        }
+
+        public sealed class UndecoratedController : ApiController
+        {
+            public IHttpActionResult Get() => Ok();
+        }
+
+        public sealed class DecoratedController : ApiController
+        {
+            public IHttpActionResult Get() => Ok();
+
+            [MapToApiVersion( "2.0" )]
+            [MapToApiVersion( "3.0" )]
+            public IHttpActionResult GetV2() => Ok();
         }
     }
 }

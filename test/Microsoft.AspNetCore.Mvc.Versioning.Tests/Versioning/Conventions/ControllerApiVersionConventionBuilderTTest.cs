@@ -8,20 +8,6 @@
 
     public class ControllerApiVersionConventionBuilderTTest
     {
-        sealed class UndecoratedController : Controller
-        {
-            public IActionResult Get() => Ok();
-        }
-
-        [ApiVersion( "2.0" )]
-        [ApiVersion( "0.9", Deprecated = true )]
-        [AdvertiseApiVersions( "3.0" )]
-        [AdvertiseApiVersions( "3.0-Beta", Deprecated = true )]
-        sealed class DecoratedController : Controller
-        {
-            public IActionResult Get() => Ok();
-        }
-
         [Fact]
         public void apply_to_should_assign_conventions_to_controller()
         {
@@ -83,7 +69,7 @@
             // arrange
             var attributes = typeof( DecoratedController ).GetTypeInfo().GetCustomAttributes().Cast<object>().ToArray();
             var controllerModel = new ControllerModel( typeof( DecoratedController ).GetTypeInfo(), attributes );
-            var controllerBuilder = new ControllerApiVersionConventionBuilder<UndecoratedController>();
+            var controllerBuilder = new ControllerApiVersionConventionBuilder<DecoratedController>();
 
             controllerBuilder.HasApiVersion( 1, 0 )
                              .AdvertisesApiVersion( 4, 0 );
@@ -101,6 +87,20 @@
                     DeprecatedApiVersions = new[] { new ApiVersion( 0, 9 ), new ApiVersion( 3, 0, "Beta" ) },
                     ImplementedApiVersions = new[] { new ApiVersion( 0, 9 ), new ApiVersion( 1, 0 ), new ApiVersion( 2, 0 ), new ApiVersion( 3, 0 ), new ApiVersion( 3, 0, "Beta" ), new ApiVersion( 4, 0 ) }
                 } );
+        }
+
+        sealed class UndecoratedController : Controller
+        {
+            public IActionResult Get() => Ok();
+        }
+
+        [ApiVersion( "2.0" )]
+        [ApiVersion( "0.9", Deprecated = true )]
+        [AdvertiseApiVersions( "3.0" )]
+        [AdvertiseApiVersions( "3.0-Beta", Deprecated = true )]
+        sealed class DecoratedController : Controller
+        {
+            public IActionResult Get() => Ok();
         }
     }
 }

@@ -1,15 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
  <PropertyGroup>
-  <TargetFramework>netcoreapp1.1</TargetFramework>
-  <AssemblyName>Microsoft.AspNetCore.Mvc.Acceptance.Tests</AssemblyName>
-  <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net451+win8</PackageTargetFallback>
+  <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
+  <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netcoreapp2.0</TargetFrameworks>
+  <AssetTargetFallback>$(AssetTargetFallback);portable-net451+win8</AssetTargetFallback>
+  <PreserveCompilationContext>true</PreserveCompilationContext>
  </PropertyGroup>
 
  <ItemGroup>
-  <Content Include="xunit.runner.json">
-   <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-  </Content>
+  <None Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
  </ItemGroup>
 
  <ItemGroup>
@@ -17,19 +16,15 @@
  </ItemGroup>
 
  <ItemGroup>
-  <PackageReference Include="more.xunit" Version="2.2.2" />
-  <PackageReference Include="more.xunit.runner.visualstudio" Version="2.2.1" />
-  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-  <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.1" />
-  <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="1.0.1" />
-  <PackageReference Include="FluentAssertions" Version="4.19.2" />
-  <PackageReference Include="Moq" Version="4.7.0" />
-  <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.3" />
+  <PackageReference Include="FluentAssertions" Version="4.19.3" />
+  <PackageReference Include="Moq" Version="4.7.99" />
+  <PackageReference Include="more.xunit" Version="2.2.3" />
+  <PackageReference Include="more.xunit.runner.visualstudio" Version="2.2.3" />
+  <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4-*" />
+  <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+  <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.0" />
+  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
   <PackageReference Include="System.Runtime.Serialization.Xml" Version="4.1.1" />
- </ItemGroup>
-
- <ItemGroup>
-   <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
  </ItemGroup>
 
  <Import Project="..\Acceptance.Test.Shared\Acceptance.Test.Shared.projitems" Label="Shared" />

@@ -6,11 +6,11 @@
     using System.Linq;
     using System.Net.Http.Formatting;
     using System.Net.Http.Headers;
+    using System.Web.Http;
     using System.Web.Http.Description;
     using static Microsoft.Web.Http.Versioning.ApiVersionParameterLocation;
-    using static System.Web.Http.Description.ApiParameterSource;
     using static System.StringComparison;
-    using System.Web.Http;
+    using static System.Web.Http.Description.ApiParameterSource;
 
     /// <summary>
     /// Represents an object that contains API version parameter descriptions.
@@ -158,9 +158,13 @@
 
             CloneFormattersAndAddMediaTypeParameter( parameter, ApiDescription.SupportedRequestBodyFormatters );
             CloneFormattersAndAddMediaTypeParameter( parameter, ApiDescription.SupportedResponseFormatters );
+            parameters.Add( NewApiVersionParameter( name, Unknown, allowOptional: false ) );
         }
 
-        ApiParameterDescription NewApiVersionParameter( string name, ApiParameterSource source )
+        ApiParameterDescription NewApiVersionParameter( string name, ApiParameterSource source ) =>
+            NewApiVersionParameter( name, source, optional );
+
+        ApiParameterDescription NewApiVersionParameter( string name, ApiParameterSource source, bool allowOptional )
         {
             Contract.Requires( !string.IsNullOrEmpty( name ) );
             Contract.Ensures( Contract.Result<ApiParameterDescription>() != null );
@@ -170,7 +174,7 @@
             {
                 Name = name,
                 Documentation = Options.DefaultApiVersionParameterDescription,
-                ParameterDescriptor = new ApiVersionParameterDescriptor( name, ApiVersion.ToString(), optional )
+                ParameterDescriptor = new ApiVersionParameterDescriptor( name, ApiVersion.ToString(), allowOptional )
                 {
                     Configuration = action.Configuration,
                     ActionDescriptor = action

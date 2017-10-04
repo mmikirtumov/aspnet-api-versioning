@@ -11,27 +11,6 @@
 
     public class ControllerApiVersionConventionBuilderTTest
     {
-        sealed class TestControllerApiVersionConventionBuilder : ControllerApiVersionConventionBuilder<IHttpController>
-        {
-            internal bool ProtectedVersionNeutral => VersionNeutral;
-
-            internal ActionApiVersionConventionBuilderCollection<IHttpController> ProtectedActionBuilders => ActionBuilders;
-        }
-
-        sealed class UndecoratedController : ApiController
-        {
-            public IHttpActionResult Get() => Ok();
-        }
-
-        [ApiVersion( "2.0" )]
-        [ApiVersion( "0.9", Deprecated = true )]
-        [AdvertiseApiVersions( "3.0" )]
-        [AdvertiseApiVersions( "3.0-Beta", Deprecated = true )]
-        sealed class DecoratedController : ApiController
-        {
-            public IHttpActionResult Get() => Ok();
-        }
-
         [Fact]
         public void version_neutral_should_be_false_by_default()
         {
@@ -185,6 +164,27 @@
                     DeprecatedApiVersions = new[] { new ApiVersion( 0, 9 ), new ApiVersion( 3, 0, "Beta" ) },
                     ImplementedApiVersions = new[] { new ApiVersion( 0, 9 ), new ApiVersion( 1, 0 ), new ApiVersion( 2, 0 ), new ApiVersion( 3, 0 ), new ApiVersion( 3, 0, "Beta" ), new ApiVersion( 4, 0 ) }
                 } );
+        }
+
+        sealed class TestControllerApiVersionConventionBuilder : ControllerApiVersionConventionBuilder<IHttpController>
+        {
+            internal bool ProtectedVersionNeutral => VersionNeutral;
+
+            internal ActionApiVersionConventionBuilderCollection<IHttpController> ProtectedActionBuilders => ActionBuilders;
+        }
+
+        sealed class UndecoratedController : ApiController
+        {
+            public IHttpActionResult Get() => Ok();
+        }
+
+        [ApiVersion( "2.0" )]
+        [ApiVersion( "0.9", Deprecated = true )]
+        [AdvertiseApiVersions( "3.0" )]
+        [AdvertiseApiVersions( "3.0-Beta", Deprecated = true )]
+        sealed class DecoratedController : ApiController
+        {
+            public IHttpActionResult Get() => Ok();
         }
     }
 }

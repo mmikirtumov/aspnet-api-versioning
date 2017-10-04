@@ -14,20 +14,6 @@ namespace Microsoft.AspNetCore.Mvc.Versioning.Conventions
 
     public class ActionApiVersionConventionBuilderTTest
     {
-        public sealed class UndecoratedController : Controller
-        {
-            public IActionResult Get() => Ok();
-        }
-
-        public sealed class DecoratedController : Controller
-        {
-            public IActionResult Get() => Ok();
-
-            [MapToApiVersion( "2.0" )]
-            [MapToApiVersion( "3.0" )]
-            public IActionResult GetV2() => Ok();
-        }
-
         [Fact]
         public void apply_to_should_assign_empty_model_without_api_versions_from_mapped_convention()
         {
@@ -90,8 +76,8 @@ namespace Microsoft.AspNetCore.Mvc.Versioning.Conventions
         public void apply_to_should_assign_model_with_declared_api_versions_from_mapped_convention_and_attributes()
         {
             // arrange
-            var controllerBuilder = new ControllerApiVersionConventionBuilder<UndecoratedController>();
-            var actionBuilder = new ActionApiVersionConventionBuilder<UndecoratedController>( controllerBuilder );
+            var controllerBuilder = new ControllerApiVersionConventionBuilder<DecoratedController>();
+            var actionBuilder = new ActionApiVersionConventionBuilder<DecoratedController>( controllerBuilder );
             var method = typeof( DecoratedController ).GetMethod( nameof( DecoratedController.Get ) );
             var attributes = method.GetCustomAttributes().Cast<object>().ToArray();
             var actionModel = new ActionModel( method, attributes );
@@ -132,6 +118,20 @@ namespace Microsoft.AspNetCore.Mvc.Versioning.Conventions
 
             // assert
             controllerBuilder.Verify( cb => cb.Action( method ), Once() );
+        }
+
+        public sealed class UndecoratedController : Controller
+        {
+            public IActionResult Get() => Ok();
+        }
+
+        public sealed class DecoratedController : Controller
+        {
+            public IActionResult Get() => Ok();
+
+            [MapToApiVersion( "2.0" )]
+            [MapToApiVersion( "3.0" )]
+            public IActionResult GetV2() => Ok();
         }
     }
 }
